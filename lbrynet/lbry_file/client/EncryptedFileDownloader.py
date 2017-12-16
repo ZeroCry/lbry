@@ -21,12 +21,13 @@ class EncryptedFileDownloader(CryptStreamDownloader):
     """Classes which inherit from this class download LBRY files"""
 
     def __init__(self, stream_hash, peer_finder, rate_limiter, blob_manager,
-                 stream_info_manager, payment_rate_manager, wallet):
+                 stream_info_manager, payment_rate_manager, wallet, key, stream_name,
+                 suggested_file_name=None):
         CryptStreamDownloader.__init__(self, peer_finder, rate_limiter, blob_manager,
-                                       payment_rate_manager, wallet)
+                                       payment_rate_manager, wallet, key, stream_name)
         self.stream_hash = stream_hash
         self.stream_info_manager = stream_info_manager
-        self.suggested_file_name = None
+        self.suggested_file_name = suggested_file_name
         self._calculated_total_bytes = None
 
     def set_stream_info(self):
@@ -169,11 +170,11 @@ class EncryptedFileDownloaderFactory(object):
 
 class EncryptedFileSaver(EncryptedFileDownloader):
     def __init__(self, stream_hash, peer_finder, rate_limiter, blob_manager, stream_info_manager,
-                 payment_rate_manager, wallet, download_directory, file_name=None):
-        EncryptedFileDownloader.__init__(self, stream_hash,
-                                         peer_finder, rate_limiter,
-                                         blob_manager, stream_info_manager,
-                                         payment_rate_manager, wallet)
+                 payment_rate_manager, wallet, download_directory, key, stream_name,
+                 suggested_file_name, file_name=None):
+        EncryptedFileDownloader.__init__(self, stream_hash, peer_finder, rate_limiter,
+                                         blob_manager, stream_info_manager, payment_rate_manager,
+                                         wallet, key, stream_name, suggested_file_name)
         self.download_directory = download_directory
         self.file_name = file_name
         self.file_written_to = None
